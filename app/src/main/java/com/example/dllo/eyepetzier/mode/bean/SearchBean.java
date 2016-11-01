@@ -16,7 +16,6 @@ public class SearchBean implements Parcelable {
      * total : 2
      * nextPageUrl : null
      */
-
     private int count;
     private int total;
     private String nextPageUrl;
@@ -24,7 +23,6 @@ public class SearchBean implements Parcelable {
      * type : video
      * data : {"dataType":"VideoBeanForClient","id":3956,"title":"Axis 最新视效作品混剪","description":"Axis 是一家位于英国，并获得大奖无数的著名视效创意公司，每年都参与大量电影、广告等影视作品等制作。这是 Aixs 公司最近作品的视效混剪。From axisanimation","provider":{"name":"Vimeo","alias":"vimeo","icon":"http://img.wdjimg.com/image/video/c3ad630be461cbb081649c9e21d6cbe3_256_256.png"},"category":"动画","author":null,"cover":{"feed":"http://img.kaiyanapp.com/9761d0f1ba2f59a0614f3c061ce18c49.jpeg","detail":"http://img.kaiyanapp.com/9761d0f1ba2f59a0614f3c061ce18c49.jpeg","blurred":"http://img.kaiyanapp.com/a1ecc1a6ade8b31bab75d10f08d135cb.jpeg","sharing":null},"playUrl":"http://baobab.wandoujia.com/api/v1/playUrl?vid=3956&editionType=default","duration":138,"webUrl":{"raw":"http://www.wandoujia.com/eyepetizer/detail.html?vid=3956","forWeibo":"http://wandou.im/10qjlo"},"releaseTime":1451232000000,"playInfo":[{"height":480,"width":848,"name":"标清","type":"normal","url":"http://baobab.wandoujia.com/api/v1/playUrl?vid=3956&editionType=normal"},{"height":720,"width":1280,"name":"高清","type":"high","url":"http://baobab.wandoujia.com/api/v1/playUrl?vid=3956&editionType=high"}],"consumption":{"collectionCount":3922,"shareCount":2447,"replyCount":40},"campaign":null,"waterMarks":null,"adTrack":null,"tags":[{"id":14,"name":"动画","actionUrl":"eyepetizer://tag/14/?title=%E5%8A%A8%E7%94%BB","adTrack":null},{"id":56,"name":"3D","actionUrl":"eyepetizer://tag/56/?title=3D","adTrack":null},{"id":2,"name":"创意","actionUrl":"eyepetizer://tag/2/?title=%E5%88%9B%E6%84%8F","adTrack":null},{"id":36,"name":"集锦","actionUrl":"eyepetizer://tag/36/?title=%E9%9B%86%E9%94%A6","adTrack":null},{"id":30,"name":"游戏","actionUrl":"eyepetizer://tag/30/?title=%E6%B8%B8%E6%88%8F","adTrack":null}],"type":"NORMAL","idx":0,"shareAdTrack":null,"favoriteAdTrack":null,"webAdTrack":null,"date":1451232000000,"promotion":null,"label":null}
      */
-
     private List<ItemListBean> itemList;
 
     public int getCount() {

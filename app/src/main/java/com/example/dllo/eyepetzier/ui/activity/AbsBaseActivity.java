@@ -24,10 +24,8 @@ public abstract class AbsBaseActivity extends AppCompatActivity {
         initView();
         initData();
     }
-
     /**
      * 绑定布局的方法
-     *
      * @return
      */
     protected abstract int setLayout();

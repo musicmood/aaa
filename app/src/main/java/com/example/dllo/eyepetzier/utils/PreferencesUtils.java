@@ -31,7 +31,7 @@ import android.content.SharedPreferences;
  */
 public class PreferencesUtils {
 
-    public static String PREFERENCE_NAME = "TrineaAndroidCommon";
+    public static String PREFERENCE_NAME = "EyepetzierSp";
 
     private PreferencesUtils() {
         throw new AssertionError();

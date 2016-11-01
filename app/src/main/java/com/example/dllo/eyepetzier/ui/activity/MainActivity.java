@@ -193,6 +193,9 @@ public class MainActivity extends AbsBaseActivity implements View.OnClickListene
     private void setSearchResult(final int position) {
         final String searchItem = (String) list.get(position);
         String searchUrl = NetUrl.SEARCH__ITEM.replace("参数", searchItem);
+
+        Log.e("MainActivity", "searchUrl" + searchUrl);
+
         NetRequestSingleton.getInstance().startRequest(searchUrl, SearchBean.class, new IOnHttpCallback<SearchBean>() {
             @TargetApi(Build.VERSION_CODES.M)
             @Override

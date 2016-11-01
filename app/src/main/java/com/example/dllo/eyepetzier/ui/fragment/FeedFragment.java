@@ -1,11 +1,14 @@
 package com.example.dllo.eyepetzier.ui.fragment;
 
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +23,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dllo.eyepetzier.R;
+import com.example.dllo.eyepetzier.mode.bean.AuthorFragmentBean;
 import com.example.dllo.eyepetzier.mode.bean.FeedFragmentBean;
+import com.example.dllo.eyepetzier.mode.bean.SearchBean;
 import com.example.dllo.eyepetzier.mode.net.IOnHttpCallback;
 import com.example.dllo.eyepetzier.mode.net.NetRequestSingleton;
 import com.example.dllo.eyepetzier.mode.net.NetUrl;
 import com.example.dllo.eyepetzier.ui.activity.Feed2ndReviewActivity;
+import com.example.dllo.eyepetzier.ui.activity.VideoIntroduceActivity;
 import com.example.dllo.eyepetzier.ui.adapter.lv.FeedFragmentLvAdapter;
 import com.example.dllo.eyepetzier.ui.adapter.rv.tools.CommonRvAdapter;
 import com.example.dllo.eyepetzier.ui.adapter.rv.tools.RvViewHolder;
+import com.example.dllo.eyepetzier.utils.Contant;
 import com.example.dllo.eyepetzier.utils.EScreenSizeDensity;
 import com.example.dllo.eyepetzier.utils.ScreenSize;
 import com.example.dllo.eyepetzier.utils.TextStyleSetter;
 import com.example.dllo.eyepetzier.view.TitleTextView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -81,6 +89,17 @@ public class FeedFragment extends AbaBaseFragment {
 
     private ImageView loadingIv;
     private RelativeLayout loadingRl;
+    private FeedFragmentBean.SectionListBean.ItemListBean.DataBean dataBean;
+    private FeedFragmentBean.SectionListBean.ItemListBean itemListBean;
+    private List<FeedFragmentBean.SectionListBean.ItemListBean> itemListBeans;
+
+    private List<AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean> videoItemListBeen;
+    private AuthorFragmentBean.ItemListBean.DataBean authorDataBean = new AuthorFragmentBean.ItemListBean.DataBean();
+    private List<AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean> mVideoItemListBeen = new ArrayList<>();
+    private AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean mVideoDataBean;
+    private AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean mVideoItemListBean;
+    private AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.ConsumptionBean authorConsBean
+            = new AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.ConsumptionBean();
 
     @Override
     protected int setLayout() {
@@ -131,6 +150,7 @@ public class FeedFragment extends AbaBaseFragment {
 
     private void initListview() {
 
+        Log.e("FeedFragment", "NetUrl.FEED_FRAGMENT_URL: " + NetUrl.FEED_FRAGMENT_URL);
         NetRequestSingleton.getInstance().startRequest(NetUrl.FEED_FRAGMENT_URL, FeedFragmentBean.class, new IOnHttpCallback<FeedFragmentBean>() {
 
             private TextStyleSetter setter;
@@ -171,15 +191,60 @@ public class FeedFragment extends AbaBaseFragment {
                 listView.setDivider(null);
                 listView.setDividerHeight(0);
                 // 设置监听
+                final Bundle bundle = new Bundle();
+                itemListBeans = response.getSectionList().get(0).getItemList();
+                int count = itemListBeans.size();
+                for (int i = 0; i < count; i++) {
+                    dataBean = itemListBeans.get(i).getData();
+                    mVideoItemListBean = new AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean();
+                    mVideoDataBean = new AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean();
+                    mVideoDataBean.setDescription(dataBean.getDescription());
+                    mVideoDataBean.setTitle(dataBean.getTitle());
+                    mVideoDataBean.setCategory(dataBean.getCategory());
+                    FeedFragmentBean.SectionListBean.ItemListBean.DataBean.CoverBean coverBean = dataBean.getCover();
+                    AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.CoverBean authorCoverBean = new AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.CoverBean();
+//                    authorCoverBean.setBlurred(coverBean.getBlurred());
+                    authorCoverBean.setDetail(coverBean.getDetail());
+                    mVideoDataBean.setCover(authorCoverBean);
+                    List<AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.PlayInfoBean> authorPlayInfoBeen = new ArrayList<>();
+                    int size = dataBean.getPlayInfo().size();
+                    for (int i1 = 0; i1 < size; i1++) {
+                        FeedFragmentBean.SectionListBean.ItemListBean.DataBean.PlayInfoBean playInfoBean = dataBean.getPlayInfo().get(i1);
+                        AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.PlayInfoBean authorPlayInfoBean = new AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.PlayInfoBean();
+                        authorPlayInfoBean.setUrl(playInfoBean.getUrl());
+                        authorPlayInfoBeen.add(authorPlayInfoBean);
+                    }
+                    FeedFragmentBean.SectionListBean.ItemListBean.DataBean.ConsumptionBean consumptionBean = dataBean.getConsumption();
+                    authorConsBean.setCollectionCount(consumptionBean.getCollectionCount());
+                    authorConsBean.setReplyCount(consumptionBean.getReplyCount());
+                    authorConsBean.setShareCount(consumptionBean.getShareCount());
+                    mVideoDataBean.setConsumption(authorConsBean);
+                    mVideoDataBean.setDuration(dataBean.getDuration());
+                    mVideoDataBean.setPlayUrl(dataBean.getPlayUrl());
+                    mVideoItemListBean.setData(mVideoDataBean);
+                    mVideoItemListBeen.add(mVideoItemListBean);
+                }
+                authorDataBean.setItemList(mVideoItemListBeen);
+                bundle.putParcelable(Contant.TO_VIDEO, authorDataBean);
+
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                        int count = parent.getAdapter().getCount();
+                        itemListBean = (FeedFragmentBean.SectionListBean.ItemListBean) parent.getItemAtPosition(position);
+
+                        // 内容的点击时间
+                        if (position >= 0 && position <= count - 3) {
+                            if (itemListBean.getData().getDataType().equals("VideoBeanForClient")) {
+                                bundle.putInt(Contant.VIDEO_POS, position);
+                                goTo(context, VideoIntroduceActivity.class, bundle);
+                            }
+                        }
                         // 1st footview
-                        if (position == parent.getAdapter().getCount() - 2) {
+                        if (position ==  count - 2) {
                             goTo(getContext(), Feed2ndReviewActivity.class);
                         };
-
                     }
                 });
             }
@@ -363,8 +428,6 @@ public class FeedFragment extends AbaBaseFragment {
 
             }
         });
-
-
     }
 
     /**

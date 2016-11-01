@@ -25,5 +25,6 @@ public final class Contant {
 
     public static final String KEY_ACTY_COMMENT_URL = "key_acty_comment_url";
 
+    public static final String SP_KEY_ISCHECKED = "sp_key_ischecked";
 
 }

@@ -85,6 +85,10 @@ public class OkHttpImplemnt implements INetwork {
                     });
                 }
 
+                /**
+                 * 网络请求成功后,解析数据
+                 */
+                // 网络请求
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String resultStr = response.body().string();

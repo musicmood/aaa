@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.dllo.eyepetzier.R;
 import com.example.dllo.eyepetzier.mode.bean.AuthorFragmentBean;
+import com.example.dllo.eyepetzier.mode.db.DatabaseSingleton;
 import com.example.dllo.eyepetzier.mode.net.NetUrl;
 import com.example.dllo.eyepetzier.ui.adapter.vp.VideoVpAdapter;
 import com.example.dllo.eyepetzier.utils.Contant;
@@ -110,7 +111,6 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
      */
     private String commentUrl;
 
-
     private DownloadManager mDownloadManager;
     public static final String URL = "http://baobab.wandoujia.com/api/v1/playUrl?vid=3514&editionType=high";
     private long downloadId;
@@ -123,6 +123,10 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
     private boolean isDownload = false;// 是否下载完成
     private boolean isDownloadling = false;// 是否在下载
 
+    /**
+     * 收藏页面用
+     */
+    private ImageView imgvLike;
 
     @Override
     protected int setLayout() {
@@ -239,7 +243,6 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
                 videoItemListBean = videoItemListBeen.get(position);
                 setVp();
                 nextPos = position;
-
             }
 
             @Override
@@ -251,15 +254,12 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
         // 获取评论页url
         commentUrl = NetUrl.COMMENT_ACTIVITY_URL_START + videoItemListBean.getData().getId() + NetUrl.COMMENT_ACTIVITY_URL_END;
 //            Log.e("VideoIntroduceActivity", "commentUrl:" + commentUrl);
-
-
     }
 
 
     /**
      * 设置页面的内容
      */
-
     private void setVp() {
         AuthorFragmentBean.ItemListBean.DataBean.HeaderBean headerBean = dataBean.getHeader();
         videoDataBean = videoItemListBean.getData();
@@ -299,6 +299,10 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
         secondDescriptionTv.setText(itemDescription);
         AuthorFragmentBean.ItemListBean.DataBean.VideoItemListBean.VideoDataBean.ConsumptionBean consumptionBean = videoDataBean.getConsumption();
         likeTv.setText(String.valueOf(consumptionBean.getCollectionCount()));
+
+        Log.e("zzzz", "likeTv.getText():" + likeTv.getText());
+        DatabaseSingleton.getInstance().insert(consumptionBean);
+
         shareTv.setText(String.valueOf(consumptionBean.getShareCount()));
         commmentTv.setText(String.valueOf(consumptionBean.getReplyCount()));
 
@@ -322,6 +326,7 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
         shareLl = bindView(R.id.item_video_introduce_share_ll);
         commentLl = bindView(R.id.item_video_introduce_comment_ll);
         downloadLl = bindView(R.id.item_video_introduce_download_ll);
+
         categoryTv = bindView(R.id.item_video_introduce_vp_subtitle_tv);
         durationTv = bindView(R.id.item_video_introduce_vp_duration_tv);
         titleTv = bindView(R.id.item_video_introduce_vp_title_tv);
@@ -340,6 +345,7 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
         twolineRl = bindView(R.id.twoline_rl);
         downloadTv = bindView(R.id.item_video_introduce_vp_dwowload_tv);
 
+        imgvLike = bindView(R.id.item_video_introduce_vp_like_iv);
         backIv.setOnClickListener(this);
         toDetailIv.setOnClickListener(this);
         twolineRl.setOnClickListener(this);
@@ -414,6 +420,16 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
              */
             // 收藏
             case R.id.item_video_introduce_like_ll:
+                // 如果未收藏
+                if ( !PreferencesUtils.getBoolean(VideoIntroduceActivity.this, Contant.SP_KEY_ISCHECKED, false) ) {
+                    imgvLike.setImageResource(R.mipmap.ic_action_favorites_added);
+                    PreferencesUtils.putBoolean(VideoIntroduceActivity.this, Contant.SP_KEY_ISCHECKED, true);
+                    T.shortMsg("收藏成功");
+                } else {
+                    imgvLike.setImageResource(R.drawable.selector_like);
+                    PreferencesUtils.putBoolean(VideoIntroduceActivity.this, Contant.SP_KEY_ISCHECKED, false);
+                    T.shortMsg("取消收藏");
+                }
                 break;
             // 分享
             case R.id.item_video_introduce_share_ll:
@@ -441,7 +457,6 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
                     updateView();
                 }
                 break;
-
         }
     }
 
@@ -504,7 +519,6 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
 
         /**
          * Creates a content observer.
-         *
          * @param
          */
         public DownlaodChangeObserver(Handler handler) {
@@ -544,7 +558,6 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
         mHanlder.sendMessageDelayed(mHanlder.obtainMessage(0, bytesAndStatus[0], bytesAndStatus[1], bytesAndStatus[2]), 100);
 
     }
-
 
     /**
      * 下载进度
@@ -588,7 +601,6 @@ public class VideoIntroduceActivity extends AbsBaseActivity implements TypeTextV
 
     /**
      * 下载的状态
-     *
      * @param downloadMangerStatus
      * @return
      */

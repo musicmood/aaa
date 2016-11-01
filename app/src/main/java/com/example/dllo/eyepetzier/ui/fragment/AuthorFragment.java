@@ -158,11 +158,6 @@ public class AuthorFragment extends AbaBaseFragment {
                                     holder.setOnClickListener(R.id.item_author_fragment_child_rv_iv, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Bundle bundle = new Bundle();
-
-                                            bundle.putParcelableArrayList(Contant.TO_VIDEO, (ArrayList<? extends Parcelable>) videoItemListBeen);
-                                            bundle.putParcelable(Contant.TO_VIDEO, dataBean);
-                                            bundle.putInt(Contant.VIDEO_POS, pos);
 
                                             goTo(context, VideoIntroduceActivity.class, bundle);
                                             T.shortMsg("作者界面视频图片的点击事件,跳转到视频的详情界面");

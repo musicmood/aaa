@@ -71,15 +71,15 @@ public class DiscoveryFragment extends AbaBaseFragment {
         Animation loadingAnimaition = AnimationUtils.loadAnimation(context,R.anim.rotate_loading);
         loadingAnimaition.setInterpolator(new LinearInterpolator());
         loadingIv.startAnimation(loadingAnimaition);
-        banner.setBannerStyle(Banner.CIRCLE_INDICATOR);
+//        banner.setBannerStyle(Banner.CIRCLE_INDICATOR);
         banner.setImages(imageUrls);
         // banner的点击事件
-        banner.setOnBannerClickListener(new Banner.OnBannerClickListener() {
-            @Override
-            public void OnBannerClick(View view, int position) {
-
-            }
-        });
+//        banner.setOnBannerClickListener(new Banner.OnBannerClickListener() {
+//            @Override
+//            public void OnBannerClick(View view, int position) {
+//
+//            }
+//        });
         // 解析下方16个图片
         NetRequestSingleton.getInstance().startRequest(NetUrl.DISCOVERY_FRAG_ICON, DiscoveryFragmentBean.class, new IOnHttpCallback<DiscoveryFragmentBean>() {
             @Override
